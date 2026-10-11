@@ -1,0 +1,9 @@
+/* Import the Azure/Blue theme compiled by Angular Material */
+@use './material-theme.scss' as *;
+
+/* Your other global styles can go here */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -1,0 +1,38 @@
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--mat-sys-surface); border: 1px solid var(--mat-sys-outline-variant); border-radius: 10px; min-height: 48px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+
+  <div style="flex: 1; margin-right: 16px;">
+    <!-- VIEW MODE -->
+    <div *ngIf="!isEditing()" style="display: flex; align-items: center; gap: 8px;">
+      <div *ngIf="isToggling()" style="display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">
+        <mat-spinner diameter="18"></mat-spinner>
+      </div>
+      <mat-checkbox *ngIf="!isToggling()" [checked]="item().isCompleted" (change)="toggleComplete.emit(item())" [disabled]="isDeleting() || isUpdating()" color="primary" class="cursor-pointer"></mat-checkbox>
+      <span [style.textDecoration]="item().isCompleted ? 'line-through' : 'none'" [style.color]="item().isCompleted ? 'var(--mat-sys-outline)' : 'var(--mat-sys-on-surface)'" style="font-weight: 500; font-size: 15px; word-break: break-all;">
+        {{ item().title }}
+      </span>
+    </div>
+
+    <!-- EDIT MODE -->
+    <div *ngIf="isEditing()" style="display: flex; align-items: center; gap: 8px;">
+      <input [(ngModel)]="editTitle" [disabled]="isUpdating()" (keyup.enter)="saveEdit()" style="flex: 1; padding: 6px 12px; border: 1px solid var(--mat-sys-outline); border-radius: 6px; font-size: 14px; outline: none; background-color: var(--mat-sys-surface); color: var(--mat-sys-on-surface);">
+      <button mat-flat-button color="primary" (click)="saveEdit()" [disabled]="isUpdating() || !editTitle.trim()" style="height: 32px; font-size: 12px; padding: 0 12px; min-width: 64px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;">
+        <mat-spinner *ngIf="isUpdating()" diameter="14"></mat-spinner>
+        <span *ngIf="!isUpdating()">Save</span>
+      </button>
+      <button mat-button (click)="isEditing.set(false)" [disabled]="isUpdating()" style="height: 32px; font-size: 12px; padding: 0 12px; min-width: auto; border-radius: 6px; cursor: pointer;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ACTION CONTROLS -->
+  <div *ngIf="!isEditing()" style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+    <button mat-icon-button color="primary" (click)="startEditing()" [disabled]="isDeleting() || isToggling() || isUpdating()" style="cursor: pointer;" title="Edit Task">
+      <mat-spinner *ngIf="isUpdating()" diameter="18" style="margin: auto;"></mat-spinner>
+      <mat-icon *ngIf="!isUpdating()" style="font-size: 20px; width: 20px; height: 20px;">edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="delete.emit(item().id)" [disabled]="isDeleting() || isToggling() || isUpdating()" style="cursor: pointer;" title="Delete Task">
+      <mat-spinner *ngIf="isDeleting()" diameter="18" color="warn" style="margin: auto;"></mat-spinner>
+      <mat-icon *ngIf="!isDeleting()" style="font-size: 20px; width: 20px; height: 20px;">delete</mat-icon>
+    </button>
+  </div>
+
+</div>

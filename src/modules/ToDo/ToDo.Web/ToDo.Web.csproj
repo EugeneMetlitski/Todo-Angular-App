@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ToDo.Infrastructure\ToDo.Infrastructure.csproj" />
+      <ProjectReference Include="..\ToDo.UseCases\ToDo.UseCases.csproj" />
+      <ProjectReference Include="..\..\..\building-blocks\Web.Auth\Web.Auth.csproj" />
+    </ItemGroup>
+
+</Project>

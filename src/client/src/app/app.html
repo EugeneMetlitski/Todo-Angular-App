@@ -1,0 +1,11 @@
+<div class="mat-app-background" style="min-height: 100vh; background-color: var(--mat-sys-surface-container-low); color: var(--mat-sys-on-surface); font-family: Roboto, sans-serif;">
+
+  <!-- PERSISTENT TOP TOOLBAR NAVIGATION -->
+  <app-layout (logout)="handleLogout()"></app-layout>
+
+  <!-- CENTRAL VIEW PORTS -->
+  <main style="padding-top: 88px; padding-bottom: 40px;">
+    <app-login *ngIf="!authService.isLoggedIn()" (loginSuccess)="refreshWorkspace()"></app-login>
+    <app-todo-dashboard *ngIf="authService.isLoggedIn()" #dashboard></app-todo-dashboard>
+  </main>
+</div>

@@ -1,0 +1,79 @@
+<div style="max-width: 650px; margin: 40px auto 0 auto; padding: 0 16px; font-family: Roboto, sans-serif;">
+
+  <!-- ADD TASK INPUT FORM -->
+  <mat-card style="padding: 24px; margin-bottom: 24px; border-radius: 16px; background-color: var(--mat-sys-surface); box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid var(--mat-sys-outline-variant);">
+    <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: var(--mat-sys-on-surface);">Add New Task</h2>
+    <form (ngSubmit)="addTodo()" style="display: flex; gap: 12px; align-items: center;">
+      <mat-form-field appearance="outline" style="flex: 1; margin-bottom: -22px;">
+        <mat-label>What needs to be done?</mat-label>
+        <input matInput [(ngModel)]="newTodoTitle" name="newTodoTitle" [disabled]="isAdding()">
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isAdding() || !newTodoTitle.trim()" style="height: 48px; min-width: 110px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;">
+        <mat-spinner *ngIf="isAdding()" diameter="20"></mat-spinner>
+        <span *ngIf="!isAdding()">Add Task</span>
+      </button>
+    </form>
+  </mat-card>
+
+  <!-- REACTION NETWORK ERROR BANNERS -->
+  <div *ngIf="errorMessage()" style="padding: 16px; margin-bottom: 24px; background: var(--mat-sys-error-container); border: 1px solid var(--mat-sys-error); border-radius: 12px; color: var(--mat-sys-on-error-container); display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <p style="font-weight: bold; margin: 0;">⚠️ Error</p>
+      <p style="font-size: 13px; margin: 4px 0 0 0;">{{ errorMessage() }}</p>
+    </div>
+    <button (click)="errorMessage.set(null)" style="background: none; border: none; color: var(--mat-sys-on-error-container); font-size: 20px; cursor: pointer; line-height: 1;">×</button>
+  </div>
+
+  <!-- INITIAL LOADING SPINNER -->
+  <div *ngIf="isInitialLoading()" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 0; gap: 12px;">
+    <mat-spinner diameter="40" color="primary"></mat-spinner>
+    <p style="color: var(--mat-sys-on-surface-variant); font-size: 14px; margin: 0;">Loading tasks...</p>
+  </div>
+
+  <!-- TODO TRACKER LAYOUT PANEL -->
+  <div *ngIf="!isInitialLoading()" style="display: flex; flex-direction: column; gap: 12px;">
+    <h3 style="color: var(--mat-sys-primary); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 4px 0;">
+      My Tasks ({{ todos().length }})
+    </h3>
+
+    <div *ngIf="todos().length === 0" style="text-align: center; padding: 48px 0; background: var(--mat-sys-surface-container); border: 1px dashed var(--mat-sys-outline-variant); border-radius: 12px; color: var(--mat-sys-on-surface-variant);">
+      No tasks found.
+    </div>
+
+    <app-todo-item
+      *ngFor="let item of todos()"
+      [item]="item"
+      [isDeleting]="deletingIds().has(item.id)"
+      [isUpdating]="updatingIds().has(item.id)"
+      [isToggling]="togglingIds().has(item.id)"
+      (delete)="deleteTodo($event)"
+      (toggleComplete)="handleToggleComplete($event)"
+      (updateTitle)="handleUpdateTitle($event)" />
+
+    <!-- IMPORT / EXPORT ACTIONS -->
+    <mat-card style="padding: 20px; margin-top: 16px; margin-bottom: 32px; border-radius: 16px; background-color: var(--mat-sys-surface); box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid var(--mat-sys-outline-variant);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+        <div style="flex: 1; min-width: 240px;">
+          <h4 style="margin: 0; font-size: 15px; font-weight: 600; color: var(--mat-sys-on-surface);">Backup & Restore Tasks</h4>
+          <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--mat-sys-on-surface-variant); line-height: 1.4;">
+            Download your task list as a JSON backup file, or upload a JSON file to replace and restore your tasks along with their completion status.
+          </p>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <input #fileInput type="file" accept=".json,application/json" (change)="onFileSelected($event)" style="display: none;">
+          <button mat-stroked-button type="button" (click)="fileInput.click()" [disabled]="isUploading()" style="height: 40px; min-width: 140px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;">
+            <mat-spinner *ngIf="isUploading()" diameter="18"></mat-spinner>
+            <span *ngIf="!isUploading()" style="display: inline-flex; align-items: center; gap: 6px; padding-top: 4px;">
+              <mat-icon style="font-size: 18px; width: 18px; height: 18px;">upload</mat-icon>
+              Upload JSON
+            </span>
+          </button>
+          <button mat-stroked-button type="button" (click)="downloadJson()" [disabled]="todos().length === 0" style="height: 40px; min-width: 140px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">download</mat-icon>
+            <span>Download JSON</span>
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
