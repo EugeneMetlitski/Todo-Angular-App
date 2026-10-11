@@ -17,4 +17,9 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\building-blocks\Web.Auth\Web.Auth.csproj" />
+      <ProjectReference Include="..\..\modules\ToDo\ToDo.Web\ToDo.Web.csproj" />
+    </ItemGroup>
+
 </Project>

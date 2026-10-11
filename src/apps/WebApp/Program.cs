@@ -1,41 +1,29 @@
-var builder = WebApplication.CreateBuilder(args);
+using Web.Auth.Extensions;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+// Call Auth configuration from building-blocks
+builder.Services.AddSharedWebAuth();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+builder.Services.AddControllers().AddApplicationPart(typeof(ToDo.Web.Controllers.ToDoController).Assembly);
+
+builder.Services.AddCors(options =>
 {
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
+    options.AddPolicy("DevCorsPolicy", policy =>
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
-app.Run();
+WebApplication app = builder.Build();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+app.UseRouting();
+app.UseCors("DevCorsPolicy");
+
+// Inject auth pipeline middleware from building-blocks
+app.UseSharedWebAuth();
+
+app.MapControllers();
+app.Run("http://localhost:5000");
