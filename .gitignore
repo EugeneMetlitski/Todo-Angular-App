@@ -20,6 +20,20 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+[Bb]uild/
+[Dd]ist/
+node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+
+# IDEs
+.idea/
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 [Ll]og/
 [Ll]ogs/
 
