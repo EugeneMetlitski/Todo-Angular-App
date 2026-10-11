@@ -45,3 +45,10 @@ Every functional folder inside the `modules/` directory implements a rigid varia
 *   **Role:** Presentational api adapters.
 *   **Contents:** Controllers, Minimal API endpoint mappings, and Data Transfer Objects (DTOs).
 *   **Dependencies:** References `ToDo.UseCases` to handle outside incoming input payloads.
+
+---
+
+## 🧪 Tests & Libraries
+
+* **Tests:** Backend unit tests live in `src/tests/ToDo.UseCases.Tests/` and cover core business logic and workflows in `ToDo.UseCases` (such as `ToDoService`). Run them using `dotnet test`.
+* **Notable Libraries:** `xUnit` for test execution, `NSubstitute` for mocking dependencies, and `FluentAssertions` for readable assertions.

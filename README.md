@@ -64,3 +64,19 @@ You can run this entire stack directly from your terminal or command prompt.
 ### 🔑 Test Account
 * **Username:** `demo`
 * **Password:** `demo`
+
+---
+
+## 🧪 Tests
+
+Unit tests are included for both backend business logic and frontend Angular components:
+* **Backend:** Located in [`src/tests/ToDo.UseCases.Tests`](./src/tests/ToDo.UseCases.Tests/) — covers business logic in `ToDo.UseCases`. Run with `dotnet test`.
+* **Frontend:** Located in [`src/client/src/app`](./src/client/src/app/) — covers Angular components and services. Run with `cd src/client && pnpm test`.
+
+---
+
+## 📦 Key Libraries
+
+A few notable libraries used in this project:
+* **Backend:** ASP.NET Core, JWT Bearer authentication, xUnit, NSubstitute, and FluentAssertions.
+* **Frontend:** Angular (Standalone components & Signals), Angular Material, and Vitest.
