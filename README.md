@@ -51,11 +51,15 @@ You can run this entire stack directly from your terminal or command prompt.
    ```bash
    cd src/client
    ```
-3. Boot up the Angular development server:
+3. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+4. Boot up the Angular development server:
    ```bash
    pnpm run start
    ```
-4. Open your browser and navigate to `http://localhost:4200`.
+5. Open your browser and navigate to `http://localhost:4200`.
 
 ### 🔑 Test Account
 * **Username:** `demo`

@@ -1,56 +1,47 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentResults;
+using Microsoft.AspNetCore.Mvc;
+using ToDo.Domain.Abstractions.UseCases;
+using ToDo.Domain.Dto;
+using ToDo.Domain.ViewModels;
 
 namespace ToDo.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ToDoController : ControllerBase
+public class ToDoController(IToDoService service) : ControllerBase
 {
-    // Our static in-memory list remains our server-side database for now
-    private static readonly List<ToDoItemDto> Items =
-    [
-        new(1, "Configure .NET 10 backend skeleton", true),
-        new(2, "Scaffold Angular client with pnpm", true),
-        new(3, "Connect Angular to .NET API via Proxy", true),
-        new(4, "Build awesome ToDo application features", false)
-    ];
-
     [HttpGet]
-    public ActionResult<IEnumerable<ToDoItemDto>> Get() => Ok(Items);
+    public async Task<ActionResult<IReadOnlyCollection<ToDoItemView>>> Get()
+    {
+        IReadOnlyCollection<ToDoItemView> result = await service.GetReadOnlyCollection(1);
+        return Ok(result);
+    }
 
     [HttpPost]
-    public ActionResult<ToDoItemDto> Create([FromBody] CreateToDoItemDto dto)
+    public async Task<ActionResult<Guid>> Create([FromBody] CreateToDoItemDto item)
     {
-        ToDoItemDto newItem = new(Items.Count + 1, dto.Title, false);
-        Items.Add(newItem);
-        return CreatedAtAction(nameof(Get), newItem);
+        IResult<Guid> result = await service.Add(item, 1);
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Errors);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Update(int id, [FromBody] UpdateToDoItemDto dto)
+    [HttpPut]
+    public async Task<ActionResult<Guid>> Update([FromBody] UpdateToDoItemDto item)
     {
-        ToDoItemDto? existingItem = Items.FirstOrDefault(x => x.Id == id);
-        if (existingItem == null) return NotFound();
-
-        // Remove old item and insert updated version into our static list
-        Items.Remove(existingItem);
-        ToDoItemDto updatedItem = existingItem with { Title = dto.Title, IsCompleted = dto.IsCompleted };
-        Items.Add(updatedItem);
-
-        return Ok(updatedItem);
+        IResult<Guid> result = await service.Update(item, 1);
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Errors);
     }
 
-    [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        ToDoItemDto? existingItem = Items.FirstOrDefault(x => x.Id == id);
-        if (existingItem == null) return NotFound();
+        IResult<bool> result = await service.Delete(id, 1);
+        return result.IsSuccess ? NoContent() : BadRequest(result.Errors);
+    }
 
-        Items.Remove(existingItem);
-        return NoContent();
+    [HttpPost("replaceAll")]
+    public async Task<IActionResult> ReplaceAll([FromBody] IEnumerable<ReplaceToDoItemDto> items)
+    {
+        IReadOnlyCollection<ToDoItemView> result = await service.ReplaceAllForUser(items, 1);
+        return Ok(result);
     }
 }
-
-public record ToDoItemDto(int Id, string Title, bool IsCompleted);
-public record CreateToDoItemDto(string Title);
-public record UpdateToDoItemDto(string Title, bool IsCompleted);
