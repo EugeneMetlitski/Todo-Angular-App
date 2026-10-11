@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Web.Auth.Controllers;
 
@@ -11,16 +15,45 @@ public class AuthController : ControllerBase
     {
         if (dto is { Username: "demo", Password: "demo" })
         {
+            const int userId = 1;
+            string token = GenerateJwtToken(userId, dto.Username);
+
             return Ok(new
             {
-                Token = "mock-jwt-token-for-demo",
-                Username = "demo"
+                Token = token,
+                Username = dto.Username,
+                UserId = userId
             });
         }
         return Unauthorized(new
         {
             Message = "Invalid username or password"
         });
+    }
+
+    private static string GenerateJwtToken(int userId, string username)
+    {
+        SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(AuthConstants.SecretKey));
+        SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);
+
+        Claim[] claims =
+        [
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new("userId", userId.ToString()),
+            new(ClaimTypes.Name, username),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        ];
+
+        JwtSecurityToken token = new(
+            issuer: AuthConstants.Issuer,
+            audience: AuthConstants.Audience,
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(7),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
 

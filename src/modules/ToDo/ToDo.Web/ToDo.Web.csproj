@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ToDo.Infrastructure\ToDo.Infrastructure.csproj" />
       <ProjectReference Include="..\ToDo.UseCases\ToDo.UseCases.csproj" />
+      <ProjectReference Include="..\..\..\building-blocks\Web.Auth\Web.Auth.csproj" />
     </ItemGroup>
 
 </Project>
