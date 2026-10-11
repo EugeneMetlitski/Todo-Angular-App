@@ -1,0 +1,57 @@
+﻿<div class="max-w-2xl mx-auto px-4 py-8">
+
+  <!-- ADD TASK FORM PANEL -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Add New Task</h2>
+    <form (ngSubmit)="addTodo()" class="flex gap-2">
+      <input
+        type="text"
+        [(ngModel)]="newTodoTitle"
+        name="newTodoTitle"
+        placeholder="What needs to be done?"
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-gray-50 disabled:opacity-50"
+        [disabled]="isLoading()">
+      <button
+        type="submit"
+        [disabled]="isLoading() || !newTodoTitle.trim()"
+        class="bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-lg transition disabled:opacity-50 cursor-pointer">
+        Add
+      </button>
+    </form>
+  </div>
+
+  <!-- LIVE BACKEND ERROR ALERT BANNER -->
+  <div *ngIf="errorMessage()" class="p-4 mb-6 bg-red-50 text-red-700 rounded-xl border border-red-100 flex justify-between items-start animate-pulse">
+    <div>
+      <p class="font-semibold">⚠️ Backend Connection Failure</p>
+      <p class="text-sm mt-0.5">{{ errorMessage() }}</p>
+    </div>
+    <button (click)="errorMessage.set(null)" class="text-red-400 hover:text-red-700 font-bold text-xl leading-none cursor-pointer">×</button>
+  </div>
+
+  <!-- OPERATIONAL SYNC LOADING SPINNER -->
+  <div *ngIf="isLoading()" class="flex flex-col items-center justify-center py-12 space-y-3">
+    <div class="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+    <p class="text-gray-500 text-sm font-medium animate-pulse">Syncing changes with server...</p>
+  </div>
+
+  <!-- MAIN TASKS VISUAL CONTAINER -->
+  <div *ngIf="!isLoading()" class="space-y-3">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">My Tasks ({{ todos().length }})</h3>
+    </div>
+
+    <!-- EMPTY REPOSITORY STATE -->
+    <div *ngIf="todos().length === 0" class="text-center py-12 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+      <p class="text-gray-400 font-medium">All caught up! No tasks found in this bounded context.</p>
+    </div>
+
+    <!-- RENDER INDIVIDUAL PRESENTATIONAL ROWS -->
+    <app-todo-item
+      *ngFor="let item of todos()"
+      [item]="item"
+      (delete)="deleteTodo($event)"
+      (toggleComplete)="handleToggleComplete($event)"
+      (updateTitle)="handleUpdateTitle($event)" />
+  </div>
+</div>
