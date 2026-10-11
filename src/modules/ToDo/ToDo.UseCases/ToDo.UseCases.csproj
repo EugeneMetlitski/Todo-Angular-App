@@ -14,4 +14,8 @@
       <ProjectReference Include="..\ToDo.Domain\ToDo.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="ToDo.UseCases.Tests" />
+    </ItemGroup>
+
 </Project>
