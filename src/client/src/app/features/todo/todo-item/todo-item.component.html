@@ -1,0 +1,30 @@
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: var(--mat-sys-surface); border: 1px solid var(--mat-sys-outline-variant); border-radius: 10px; min-height: 48px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+
+  <div style="flex: 1; margin-right: 16px;">
+    <!-- VIEW MODE -->
+    <div *ngIf="!isEditing()" style="display: flex; align-items: center; gap: 8px;">
+      <mat-checkbox [checked]="item().isCompleted" (change)="toggleComplete.emit(item())" color="primary" class="cursor-pointer"></mat-checkbox>
+      <span [style.textDecoration]="item().isCompleted ? 'line-through' : 'none'" [style.color]="item().isCompleted ? 'var(--mat-sys-outline)' : 'var(--mat-sys-on-surface)'" style="font-weight: 500; font-size: 15px; word-break: break-all;">
+        {{ item().title }}
+      </span>
+    </div>
+
+    <!-- EDIT MODE -->
+    <div *ngIf="isEditing()" style="display: flex; align-items: center; gap: 8px;">
+      <input [(ngModel)]="editTitle" style="flex: 1; padding: 6px 12px; border: 1px solid var(--mat-sys-outline); border-radius: 6px; font-size: 14px; outline: none; background-color: var(--mat-sys-surface); color: var(--mat-sys-on-surface);">
+      <button mat-flat-button color="primary" (click)="saveEdit()" style="height: 32px; font-size: 12px; padding: 0 12px; min-width: auto; border-radius: 6px; cursor: pointer;">Save</button>
+      <button mat-button (click)="isEditing.set(false)" style="height: 32px; font-size: 12px; padding: 0 12px; min-width: auto; border-radius: 6px; cursor: pointer;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- ACTION CONTROLS -->
+  <div *ngIf="!isEditing()" style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+    <button mat-icon-button color="primary" (click)="startEditing()" style="cursor: pointer;" title="Edit Task">
+      <mat-icon style="font-size: 20px; width: 20px; height: 20px;">edit</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="delete.emit(item().id)" style="cursor: pointer;" title="Delete Task">
+      <mat-icon style="font-size: 20px; width: 20px; height: 20px;">delete</mat-icon>
+    </button>
+  </div>
+
+</div>

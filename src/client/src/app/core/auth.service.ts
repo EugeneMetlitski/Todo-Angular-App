@@ -4,10 +4,8 @@ import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  // Track token reactively using signals
   private tokenSignal = signal<string | null>(localStorage.getItem('demo_token'));
 
-  // Publicly exposed status that components can look at
   isLoggedIn = computed(() => !!this.tokenSignal());
 
   constructor(private http: HttpClient) {}

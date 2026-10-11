@@ -1,0 +1,21 @@
+<mat-toolbar color="primary" class="mat-elevation-z3" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; height: 64px; background-color: var(--mat-sys-primary); color: var(--mat-sys-on-primary);">
+  <div style="display: flex; align-items: center; gap: 10px; color: var(--mat-sys-on-primary);">
+    <mat-icon>assignment_turned_in</mat-icon>
+    <span style="font-weight: 600; font-size: 18px; letter-spacing: -0.01em;">To do app</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 16px;">
+    @if (authService.isLoggedIn()) {
+      <span style="font-size: 14px; font-weight: 500; background: rgba(255, 255, 255, 0.2); color: var(--mat-sys-on-primary); padding: 4px 12px; border-radius: 9999px; display: inline-flex; align-items: center; gap: 4px;">
+        👤 demo
+      </span>
+      <button mat-stroked-button (click)="logout.emit()" style="color: var(--mat-sys-on-primary); border-color: rgba(255, 255, 255, 0.6); cursor: pointer;">
+        Log Out
+      </button>
+    } @else {
+      <span style="font-size: 14px; font-weight: 500; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); color: var(--mat-sys-on-primary); padding: 4px 12px; border-radius: 9999px;">
+        <mat-icon style="transform: scale(0.75); margin-right: 4px;">lock</mat-icon> Secure Mode
+      </span>
+    }
+  </div>
+</mat-toolbar>

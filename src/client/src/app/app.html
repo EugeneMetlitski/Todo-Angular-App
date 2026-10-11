@@ -1,28 +1,11 @@
-<div class="min-h-screen bg-gray-50 text-gray-800">
+<div class="mat-app-background" style="min-height: 100vh; background-color: var(--mat-sys-surface-container-low); color: var(--mat-sys-on-surface); font-family: Roboto, sans-serif;">
 
-  <!-- REUSABLE TOP BAR NAVIGATION -->
-  <nav class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16 flex items-center justify-between px-6">
-    <div class="flex items-center space-x-2">
-      <span class="text-xl">🎯</span>
-      <h1 class="text-lg font-bold text-gray-900 tracking-tight">My App</h1>
-    </div>
+  <!-- PERSISTENT TOP TOOLBAR NAVIGATION -->
+  <app-layout (logout)="handleLogout()"></app-layout>
 
-    <div class="flex items-center space-x-4">
-      <span *ngIf="authService.isLoggedIn()" class="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-        👤 User: <span class="text-gray-800 font-semibold">demo</span>
-      </span>
-      <button *ngIf="authService.isLoggedIn()" (click)="handleLogout()" class="bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 font-medium text-sm px-4 py-2 rounded-lg transition border border-gray-200 hover:border-red-100 cursor-pointer">
-        Log Out
-      </button>
-      <span *ngIf="!authService.isLoggedIn()" class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-        🔒 Secure Mode
-      </span>
-    </div>
-  </nav>
-
-  <!-- CONTENT VIEWS SWITCH -->
-  <main class="py-4">
-    <app-login *ngIf="!authService.isLoggedIn()" (loginSuccess)="refreshWorkspace()" />
-    <app-todo-dashboard *ngIf="authService.isLoggedIn()" #dashboard />
+  <!-- CENTRAL VIEW PORTS -->
+  <main style="padding-top: 88px; padding-bottom: 40px;">
+    <app-login *ngIf="!authService.isLoggedIn()" (loginSuccess)="refreshWorkspace()"></app-login>
+    <app-todo-dashboard *ngIf="authService.isLoggedIn()" #dashboard></app-todo-dashboard>
   </main>
 </div>

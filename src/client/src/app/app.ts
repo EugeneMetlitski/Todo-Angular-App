@@ -1,13 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/auth.service';
-import { LoginComponent } from './auth/login.component';
-import { ToDoDashboardComponent } from './todo/todo-dashboard.component';
+import { LayoutComponent } from './core/layout/layout.component';
+import { LoginComponent } from './features/auth/login.component';
+import { ToDoDashboardComponent } from './features/todo/todo-dashboard/todo-dashboard.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, LoginComponent, ToDoDashboardComponent],
+  imports: [CommonModule, LayoutComponent, LoginComponent, ToDoDashboardComponent],
   templateUrl: './app.html'
 })
 export class App {

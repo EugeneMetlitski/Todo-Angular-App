@@ -1,0 +1,49 @@
+﻿<div style="max-width: 650px; margin: 40px auto 0 auto; padding: 0 16px; font-family: Roboto, sans-serif;">
+
+  <!-- ADD TASK INPUT FORM -->
+  <mat-card style="padding: 24px; margin-bottom: 24px; border-radius: 16px; background-color: var(--mat-sys-surface); box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid var(--mat-sys-outline-variant);">
+    <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: var(--mat-sys-on-surface);">Add New Task</h2>
+    <form (ngSubmit)="addTodo()" style="display: flex; gap: 12px; align-items: center;">
+      <mat-form-field appearance="outline" style="flex: 1; margin-bottom: -22px;">
+        <mat-label>What needs to be done?</mat-label>
+        <input matInput [(ngModel)]="newTodoTitle" name="newTodoTitle" [disabled]="isLoading()">
+      </mat-form-field>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isLoading() || !newTodoTitle.trim()" style="height: 48px; border-radius: 8px; cursor: pointer;">
+        Add Task
+      </button>
+    </form>
+  </mat-card>
+
+  <!-- REACTION NETWORK ERROR BANNERS -->
+  <div *ngIf="errorMessage()" style="padding: 16px; margin-bottom: 24px; background: var(--mat-sys-error-container); border: 1px solid var(--mat-sys-error); border-radius: 12px; color: var(--mat-sys-on-error-container); display: flex; justify-content: space-between; align-items: flex-start;">
+    <div>
+      <p style="font-weight: bold; margin: 0;">⚠️ Backend Connection Failure</p>
+      <p style="font-size: 13px; margin: 4px 0 0 0;">{{ errorMessage() }}</p>
+    </div>
+    <button (click)="errorMessage.set(null)" style="background: none; border: none; color: var(--mat-sys-on-error-container); font-size: 20px; cursor: pointer; line-height: 1;">×</button>
+  </div>
+
+  <!-- SYSTEM STATUS SYNC SPINNER -->
+  <div *ngIf="isLoading()" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 0; gap: 12px;">
+    <mat-spinner diameter="40" color="primary"></mat-spinner>
+    <p style="color: var(--mat-sys-on-surface-variant); font-size: 14px; margin: 0;">Syncing changes with server...</p>
+  </div>
+
+  <!-- TODO TRACKER LAYOUT PANEL -->
+  <div *ngIf="!isLoading()" style="display: flex; flex-direction: column; gap: 12px;">
+    <h3 style="color: var(--mat-sys-primary); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 4px 0;">
+      My Tasks ({{ todos().length }})
+    </h3>
+
+    <div *ngIf="todos().length === 0" style="text-align: center; padding: 48px 0; background: var(--mat-sys-surface-container); border: 1px dashed var(--mat-sys-outline-variant); border-radius: 12px; color: var(--mat-sys-on-surface-variant);">
+      All caught up! No tasks found in this bounded context.
+    </div>
+
+    <app-todo-item
+      *ngFor="let item of todos()"
+      [item]="item"
+      (delete)="deleteTodo($event)"
+      (toggleComplete)="handleToggleComplete($event)"
+      (updateTitle)="handleUpdateTitle($event)" />
+  </div>
+</div>

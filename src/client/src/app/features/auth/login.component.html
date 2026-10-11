@@ -1,0 +1,40 @@
+﻿<div style="max-width: 450px; margin: 40px auto 0 auto; padding: 0 16px; font-family: Roboto, sans-serif;">
+  <mat-card style="padding: 32px; border-radius: 16px; background-color: var(--mat-sys-surface); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); border: 1px solid var(--mat-sys-outline-variant);">
+
+    <mat-card-header style="justify-content: center; margin-bottom: 8px;">
+      <mat-card-title style="font-size: 24px; font-weight: bold; color: var(--mat-sys-on-surface);">Welcome Back</mat-card-title>
+    </mat-card-header>
+
+    <p style="text-align: center; color: var(--mat-sys-on-surface-variant); font-size: 14px; margin-bottom: 24px;">
+      Sign in to manage your ToDo list
+    </p>
+
+    <div style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container); padding: 16px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; border: 1px solid var(--mat-sys-outline-variant);">
+      <p style="font-weight: bold; margin: 0 0 4px 0;">💡 Sandbox Demo Account:</p>
+      <p style="margin: 0;"><strong>Username:</strong> demo &nbsp;|&nbsp; <strong>Password:</strong> demo</p>
+    </div>
+
+    <form (ngSubmit)="handleLogin()" style="display: flex; flex-direction: column; gap: 16px;">
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [(ngModel)]="username" name="username" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" [(ngModel)]="password" name="password" required>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()" style="padding: 12px 0; font-size: 16px; border-radius: 8px; cursor: pointer; height: 48px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <mat-spinner *ngIf="isLoading()" diameter="20" color="accent"></mat-spinner>
+          <span>{{ isLoading() ? 'Signing in...' : 'Sign In' }}</span>
+        </div>
+      </button>
+    </form>
+
+    <div *ngIf="errorMessage()" style="margin-top: 16px; padding: 12px; color: var(--mat-sys-on-error-container); font-size: 14px; border-radius: 8px; border: 1px solid var(--mat-sys-error); text-align: center; font-weight: 500; background: var(--mat-sys-error-container);">
+      {{ errorMessage() }}
+    </div>
+  </mat-card>
+</div>
