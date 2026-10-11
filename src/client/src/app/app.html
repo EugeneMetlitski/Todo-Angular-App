@@ -1,39 +1,28 @@
-<div style="font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+<div class="min-h-screen bg-gray-50 text-gray-800">
 
-  <!-- LOGIN VIEW -->
-  <div *ngIf="!authService.isLoggedIn()">
-    <h2>Login</h2>
-    <p style="background: #f0f0f0; padding: 10px; border-radius: 4px; font-size: 0.9em;">
-      Use the demo account credentials listed below to test:<br>
-      <strong>Username:</strong> demo | <strong>Password:</strong> demo
-    </p>
-    <div style="margin-bottom: 10px;">
-      <input type="text" [(ngModel)]="username" placeholder="Username" style="width: 100%; padding: 8px; box-sizing: border-box;">
-    </div>
-    <div style="margin-bottom: 10px;">
-      <input type="password" [(ngModel)]="password" placeholder="Password" style="width: 100%; padding: 8px; box-sizing: border-box;">
-    </div>
-    <button (click)="onLogin()" style="width: 100%; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Log In
-    </button>
-    <p *ngIf="errorMessage" style="color: red; font-size: 0.9em;">{{errorMessage}}</p>
-  </div>
-
-  <!-- TODO VIEW -->
-  <div *ngIf="authService.isLoggedIn()">
-    <h2>My ToDo List</h2>
-
-    <div style="display: flex; margin-bottom: 20px;">
-      <input type="text" [(ngModel)]="newTodoTitle" placeholder="Add a new task..." style="flex: 1; padding: 8px;">
-      <button (click)="addTodo()" style="padding: 8px 15px; background: #28a745; color: white; border: none; cursor: pointer;">Add</button>
+  <!-- REUSABLE TOP BAR NAVIGATION -->
+  <nav class="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16 flex items-center justify-between px-6">
+    <div class="flex items-center space-x-2">
+      <span class="text-xl">🎯</span>
+      <h1 class="text-lg font-bold text-gray-900 tracking-tight">My App</h1>
     </div>
 
-    <ul style="list-style: none; padding: 0;">
-      <li *ngFor="let todo of todos" style="padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center;">
-        <input type="checkbox" [checked]="todo.isCompleted" disabled style="margin-right: 10px;">
-        <span [style.textDecoration]="todo.isCompleted ? 'line-through' : 'none'">{{ todo.title }}</span>
-      </li>
-    </ul>
-  </div>
+    <div class="flex items-center space-x-4">
+      <span *ngIf="authService.isLoggedIn()" class="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+        👤 User: <span class="text-gray-800 font-semibold">demo</span>
+      </span>
+      <button *ngIf="authService.isLoggedIn()" (click)="handleLogout()" class="bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 font-medium text-sm px-4 py-2 rounded-lg transition border border-gray-200 hover:border-red-100 cursor-pointer">
+        Log Out
+      </button>
+      <span *ngIf="!authService.isLoggedIn()" class="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+        🔒 Secure Mode
+      </span>
+    </div>
+  </nav>
 
+  <!-- CONTENT VIEWS SWITCH -->
+  <main class="py-4">
+    <app-login *ngIf="!authService.isLoggedIn()" (loginSuccess)="refreshWorkspace()" />
+    <app-todo-dashboard *ngIf="authService.isLoggedIn()" #dashboard />
+  </main>
 </div>
